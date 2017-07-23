@@ -267,6 +267,10 @@ public class MainApplication extends AppCompatActivity {
             displayDataList();
             setTitle(faculty); // ActionBar Title
         }
+
+        public void onUserClickBeforeFinishLoadingData() {
+
+        }
     }
 
     private void makeSureHasDepartmentData() {
