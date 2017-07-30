@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by Will on 2017/5/20.
  */
-public class Classroom implements Serializable {
+public class Classroom implements Serializable, Searchable {
     private String name;
 
     private Building buildingThatThisClassroomAt;
@@ -67,5 +67,10 @@ public class Classroom implements Serializable {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (buildingThatThisClassroomAt != null ? buildingThatThisClassroomAt.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public boolean match(String pattern) {
+        return buildingThatThisClassroomAt.match(pattern) || name.toLowerCase().replaceAll(" ", "").contains(pattern);
     }
 }

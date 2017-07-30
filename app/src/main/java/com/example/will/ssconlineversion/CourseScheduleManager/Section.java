@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.example.will.ssconlineversion.CourseScheduleManager.Exceptions.InstructorTBAException;
 import com.example.will.ssconlineversion.CourseScheduleManager.Exceptions.NoScheduledMeetingException;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.BuildingManager;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.InstructorManager;
 
 import java.io.Serializable;
 import java.sql.Time;
@@ -14,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Will on 2017/5/22.
  */
-public class Section implements Serializable, Comparable<Section> {
+public class Section implements Serializable, Comparable<Section>, Searchable {
     private Course course;
     private String section, status, activity;
     private Set<String> days;
@@ -316,5 +318,11 @@ public class Section implements Serializable, Comparable<Section> {
             else
                 return i1;
         }
+    }
+
+    @Override
+    public boolean match(String pattern) {
+        //if (pattern.contains(this.activity.replaceAll(" ", ""))) // TODO: consider a case when user input "cpsc 221 lab"
+        return this.course.match(pattern) && section.toLowerCase().replaceAll(" ", "").contains(pattern);
     }
 }

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.example.will.ssconlineversion.CourseScheduleManager.*;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.CourseManager;
 
 /**
  * Created by Will on 2017/6/12.

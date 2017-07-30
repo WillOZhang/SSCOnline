@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Created by Will on 2017/5/20.
  */
-public class Instructor implements Serializable {
+public class Instructor implements Serializable, Searchable {
     private String name;
 
     private List<Course> courses;
@@ -79,5 +79,10 @@ public class Instructor implements Serializable {
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
+    }
+
+    @Override
+    public boolean match(String pattern) {
+        return name.toLowerCase().replaceAll(" ", "").contains(pattern);
     }
 }

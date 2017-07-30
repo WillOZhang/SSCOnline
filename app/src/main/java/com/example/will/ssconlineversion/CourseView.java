@@ -1,5 +1,6 @@
 package com.example.will.ssconlineversion;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -44,9 +47,13 @@ import static com.example.will.ssconlineversion.MainApplication.TAG;
 
 public class CourseView extends AppCompatActivity {
     private static final String COURSE = "Course";
-    private List<String> dataList;
-    private SListViewAdapter sListViewAdapter;
+    private ArrayList<String> dataList;
     private Course course;
+
+    private RecyclerView mRecyclerView;
+    private SListViewAdapter sListViewAdapter;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private TextView subtitle;
     private FloatingActionButton refresh;
@@ -58,11 +65,28 @@ public class CourseView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_view_refactor);
 
+        initData();
+        initView();
+
+        // load section data
+        if (isNetworkConnected())
+            new RefreshSectionList().execute(course);
+        else
+            readJson(COURSE);
+    }
+
+    private void initData() {
         // handle the data that was passed from the intent
         Intent intent = this.getIntent();
         course = (Course) intent.getSerializableExtra("course");
-        dataList = new ArrayList<>();
 
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        dataList = new ArrayList<>();
+        sListViewAdapter = new SListViewAdapter(dataList);
+        mAdapter = sListViewAdapter;
+    }
+
+    private void initView() {
         // Update on the UI
         // set toolbar to display the course number and the course name
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,15 +106,9 @@ public class CourseView extends AppCompatActivity {
         assignCancelOnClickListener();
 
         // handle data list
-        ListView listView = (ListView) findViewById(R.id.sections);
-        sListViewAdapter = new SListViewAdapter(this, dataList);
-        listView.setAdapter(sListViewAdapter);
-
-        // load section data
-        if (isNetworkConnected())
-            new RefreshSectionList().execute(course);
-        else
-            readJson(COURSE);
+        mRecyclerView = (RecyclerView) findViewById(R.id.sections);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void assignRefreshOnClickListener() {
@@ -104,24 +122,28 @@ public class CourseView extends AppCompatActivity {
     }
 
     private void assignDetailsOnClickListener(final String descriptionText) {
+
+        // TODO: BUG !!!!!!!!!!!!!
+
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Use the Builder class for convenient dialog construction
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(CourseView.this);
                 String temp;
                 if (descriptionText.length() > 1)
                     temp = descriptionText;
                 else
                     temp = getString(R.string.no_description);
                 builder.setMessage(temp)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // don't really need to do something here
                             }
                         });
                 // Create the AlertDialog object
-                builder.create();
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }
@@ -176,14 +198,14 @@ public class CourseView extends AppCompatActivity {
                 dataList.add("No section for the selected course");
             }
             changeDataList(course.getSectionsForDisplay());
-            sListViewAdapter.notifyDataSetChanged();
+            sListViewAdapter.updateData();
             storeDataInJson(COURSE);
         }
 
         @Override
         protected void onProgressUpdate(Course... value) {
             changeDataList(course.getSectionsForDisplay());
-            sListViewAdapter.notifyDataSetChanged();
+            sListViewAdapter.updateData();
         }
     }
 

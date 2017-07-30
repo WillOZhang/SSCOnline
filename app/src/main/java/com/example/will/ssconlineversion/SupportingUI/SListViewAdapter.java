@@ -2,6 +2,7 @@ package com.example.will.ssconlineversion.SupportingUI;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,11 @@ import java.util.List;
  * Created by Will on 2017/6/24.
  */
 
-public class SListViewAdapter extends ArrayAdapter<String> {
+public class SListViewAdapter extends RecyclerView.Adapter<SListViewAdapter.ViewHolder> {
     private static final String TAG = "Tag";
     private static final String ERROR = "Error";
+    private static final String NO_SECTION = "There is no section info available for registration";
 
-    private final Context context;
     private final List<String> values;
     private String[] displayString;
     private String firstLineName;
@@ -34,17 +35,21 @@ public class SListViewAdapter extends ArrayAdapter<String> {
 
     private boolean hasSection = true;
 
-    private static class ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView1;
         TextView textView2;
         ProgressBar prograssBar;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textView1 = (TextView) itemView.findViewById(R.id.firstLine);
+            textView2 = (TextView) itemView.findViewById(R.id.secondLine);
+            prograssBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
+        }
     }
 
-    public SListViewAdapter(Context context, List<String> values) {
-        super(context, -1, values);
-
-        this.context = context;
-        this.values = values;
+    public SListViewAdapter(ArrayList<String> data) {
+        this.values = data;
 
         if (firstLineTextList == null && secondLineTextList == null) {
             firstLineTextList = new ArrayList<>();
@@ -60,31 +65,19 @@ public class SListViewAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        updateData();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.s_list, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        setDisplayData(holder, position);
+    }
 
-        if (convertView == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            convertView = inflater.inflate(R.layout.s_list, parent, false);
-
-            viewHolder = new ViewHolder();
-            viewHolder.textView1 = (TextView) convertView.findViewById(R.id.firstLine);
-            viewHolder.textView2 = (TextView) convertView.findViewById(R.id.secondLine);
-            viewHolder.prograssBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-
-            convertView.setTag(viewHolder);
-        } else
-            viewHolder = (ViewHolder) convertView.getTag();
-
-        setDisplayData(viewHolder, position);
-
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return values == null ? 0 : values.size();
     }
 
     private void setDisplayData(ViewHolder viewHolder, int position) {
@@ -118,15 +111,16 @@ public class SListViewAdapter extends ArrayAdapter<String> {
         }
     }
 
-    private void updateData() {
+    public void updateData() {
         preHandleS();
+        notifyDataSetChanged();
         Log.i(TAG, "updated sections info");
     }
 
     private void preHandleS() {
         reset();
         if (values.size() == 0)
-            values.add("No section for the selected course");
+            values.add(NO_SECTION);
         for (int i = 0; i < values.size(); i++) {
             String string = values.get(i);
             if (string.contains("section!")) {
@@ -145,8 +139,8 @@ public class SListViewAdapter extends ArrayAdapter<String> {
                 } catch (IndexOutOfBoundsException e) {
                     Log.i(ERROR, string);
                 }
-            } else if (string.contains("No section for the selected course")) {
-                firstLineName = "No section for the selected course";
+            } else if (string.contains(NO_SECTION)) {
+                firstLineName = NO_SECTION;
                 firstLineTextList.add(firstLineName);
                 hasSection = false;
             }

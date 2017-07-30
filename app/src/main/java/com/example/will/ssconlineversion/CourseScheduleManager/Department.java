@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Will on 2017/5/22.
  */
-public class Department implements Serializable, Iterable<Course>, Comparable<Department> {
+public class Department implements Serializable, Iterable<Course>, Comparable<Department>, Searchable {
 
     private String shortName;
     private String name;
@@ -134,5 +134,10 @@ public class Department implements Serializable, Iterable<Course>, Comparable<De
         }
 
         return s1.compareTo(s2);
+    }
+
+    @Override
+    public boolean match(String pattern) {
+        return name.toLowerCase().contains(pattern);
     }
 }

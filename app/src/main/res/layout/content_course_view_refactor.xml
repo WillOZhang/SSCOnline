@@ -14,7 +14,7 @@
         <!--android:layout_margin="@dimen/text_margin"-->
         <!--android:text="@string/large_text" />-->
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
     android:id="@+id/sections"
     android:layout_width="match_parent"
     android:layout_height="383dp" />

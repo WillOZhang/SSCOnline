@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.will.ssconlineversion.CourseScheduleManager.Course;
-import com.example.will.ssconlineversion.CourseScheduleManager.CourseManager;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.CourseManager;
 import com.example.will.ssconlineversion.CourseScheduleManager.Department;
 import com.example.will.ssconlineversion.CourseScheduleManager.Section;
 import com.example.will.ssconlineversion.HandleData.ReadJson;
@@ -39,7 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainApplication extends AppCompatActivity {
@@ -97,7 +96,6 @@ public class MainApplication extends AppCompatActivity {
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         actionBar = getActionBar();
-
         sauder = (Button) findViewById(R.id.sauder);
         science = (Button) findViewById(R.id.science);
         engineering = (Button) findViewById(R.id.engineering);
@@ -230,6 +228,7 @@ public class MainApplication extends AppCompatActivity {
     // Request faculty data set
     private class RequestFacultyData extends AsyncTask<List<String>, String, String> {
         Toast toast;
+        boolean isUserClicker = false;
         @Override
         protected String doInBackground(List<String>... params) {
             List<String> temp = params[0];
@@ -261,15 +260,18 @@ public class MainApplication extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(String... value) {
-            String faculty = value[0];
-            changeFacultyDataList(faculty);
-            hideAllButtons();
-            displayDataList();
-            setTitle(faculty); // ActionBar Title
+            //if (!isUserClicker) {
+                String faculty = value[0];
+                changeFacultyDataList(faculty);
+                hideAllButtons();
+                displayDataList();
+                setTitle(faculty); // ActionBar Title
+            //}
         }
 
         public void onUserClickBeforeFinishLoadingData() {
-
+            toast.cancel();
+            isUserClicker = true;
         }
     }
 
@@ -297,6 +299,7 @@ public class MainApplication extends AppCompatActivity {
                 try {
                     String temp = (String) parent.getItemAtPosition(position);
                     String departmentShortName = temp.split("@")[2];
+                    //requestFacultyData.onUserClickBeforeFinishLoadingData();
                     if (isNetworkConnected()) {
                         if (!CourseManager.getInstance().hasDepartmentData(departmentShortName)) {
                             requestDepartmentData = new RequestDepartmentData();

@@ -8,11 +8,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -20,6 +18,9 @@ import java.sql.Time;
 
 import com.example.will.ssconlineversion.CourseScheduleManager.*;
 import com.example.will.ssconlineversion.CourseScheduleManager.Exceptions.NoScheduledMeetingException;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.BuildingManager;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.CourseManager;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.InstructorManager;
 
 /**
  * Created by Will on 2017/6/25.
@@ -274,7 +275,7 @@ public class RequestData {
                 // ignore all waiting list courses and the sections that are blocked
                 if (activity.equals("Waiting List"))
                     return;
-                if (status.equals("Blocked"))
+                if (activity.equals("Blocked"))
                     return;
 
                 // Set the section
@@ -315,6 +316,9 @@ public class RequestData {
                     return;
                 } catch (NumberFormatException e) {
 
+                } catch (NullPointerException e) {
+                    Log.i("Error", "Something went wrong when handle last section in course "
+                    + editingCourse.getDepartment().getCourseNumbers() + editingCourse.getCourseNumber());
                 }
             }
         } catch (IOException ignored) {

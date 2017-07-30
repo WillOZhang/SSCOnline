@@ -1,13 +1,12 @@
 package com.example.will.ssconlineversion.HandleData;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Time;
 import java.util.List;
 import java.util.Set;
 import com.example.will.ssconlineversion.CourseScheduleManager.*;
 import com.example.will.ssconlineversion.CourseScheduleManager.Exceptions.InstructorTBAException;
 import com.example.will.ssconlineversion.CourseScheduleManager.Exceptions.NoScheduledMeetingException;
+import com.example.will.ssconlineversion.CourseScheduleManager.Managers.CourseManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;

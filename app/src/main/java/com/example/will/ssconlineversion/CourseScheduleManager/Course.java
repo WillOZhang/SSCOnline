@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Will on 2017/5/20.
  */
-public class Course implements Serializable, Iterable<Section>, Comparable<Course> {
+public class Course implements Serializable, Iterable<Section>, Comparable<Course>, Searchable {
     private Department department;
     private String courseNumber;
     private String courseName;
@@ -65,6 +65,26 @@ public class Course implements Serializable, Iterable<Section>, Comparable<Cours
     }
 
     public void setDescription(String description) {
+        // handle duplicated description
+//        String regex = "\\n\\n\\n";
+//        String[] tempArray = description.split(regex);
+//        String result = "";
+//        for (int i = 0; i < tempArray.length; i++) {
+//            for (int j = i + 1; j < tempArray.length; j++) {
+//                if (tempArray[i] == null)
+//                    break;
+//                result += tempArray[i] + regex;
+//                if (tempArray[i].length() == tempArray[j].length()) {
+//                    int index = j;
+//                    for (int t = tempArray.length - 1; j < t; t--) {
+//                        if (tempArray[t] != null)
+//                            index = t;
+//                    }
+//                    tempArray[j] = tempArray[index];
+//                    tempArray[index] = null;
+//                }
+//            }
+//        }
         this.description = description;
     }
 
@@ -182,6 +202,44 @@ public class Course implements Serializable, Iterable<Section>, Comparable<Cours
     }
 
     public String getReqs() {
+        // handle duplicated description
+//        String regex = "\n";
+//        String[] tempArray = reqs.split(regex);
+//        String result = "";
+//        for (int i = 0; i < tempArray.length; i++) {
+//            for (int j = i + 1; j < tempArray.length; j++) {
+//                if (tempArray[i] == null || tempArray[j] == null)
+//                    break;
+//                result += tempArray[i] + regex;
+//                if (tempArray[i].length() == tempArray[j].length()) {
+//                    int index = j;
+//                    for (int t = tempArray.length - 1; j < t; t--) {
+//                        if (tempArray[t] != null)
+//                            index = t;
+//                    }
+//                    tempArray[j] = tempArray[index];
+//                    tempArray[index] = null;
+//                }
+//            }
+//        }
+        
+//        String regex = "\n";
+//        String[] tempArray = reqs.split(regex);
+//        String result = "";
+//        for (int i = 0; i < tempArray.length - 1; i++) {
+//                if (tempArray[i] == null || tempArray[i + 1] == null)
+//                    break;
+//                result += tempArray[i] + regex;
+//                if (tempArray[i].length() == tempArray[i + 1].length()) {
+//                    int index = i + 1;
+//                    for (int t = tempArray.length - 1; i + 1 < t; t--) {
+//                        if (tempArray[t] != null)
+//                            index = t;
+//                    }
+//                    tempArray[i + 1] = tempArray[index];
+//                    tempArray[index] = null;
+//                }
+//        }
         return reqs;
     }
 
@@ -269,5 +327,11 @@ public class Course implements Serializable, Iterable<Section>, Comparable<Cours
             } else
                 return i1 - i2;
         }
+    }
+
+    @Override
+    public boolean match(String pattern) {
+        String name = this.department.getShortName().toLowerCase().replaceAll(" ", "") + this.courseNumber.replaceAll(" ", "");
+        return name.contains(pattern);
     }
 }

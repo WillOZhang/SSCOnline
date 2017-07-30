@@ -1,4 +1,6 @@
-package com.example.will.ssconlineversion.CourseScheduleManager;
+package com.example.will.ssconlineversion.CourseScheduleManager.Managers;
+
+import com.example.will.ssconlineversion.CourseScheduleManager.Instructor;
 
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;

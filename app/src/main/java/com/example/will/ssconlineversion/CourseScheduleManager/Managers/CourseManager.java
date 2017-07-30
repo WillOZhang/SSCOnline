@@ -1,6 +1,8 @@
-package com.example.will.ssconlineversion.CourseScheduleManager;
+package com.example.will.ssconlineversion.CourseScheduleManager.Managers;
 
-import java.io.Serializable;
+import com.example.will.ssconlineversion.CourseScheduleManager.Course;
+import com.example.will.ssconlineversion.CourseScheduleManager.Department;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
