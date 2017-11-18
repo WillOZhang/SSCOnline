@@ -1,6 +1,5 @@
 package com.example.will.ssconlineversion;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,7 +78,6 @@ public class CourseView extends AppCompatActivity {
         Intent intent = this.getIntent();
         course = (Course) intent.getSerializableExtra("course");
 
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         dataList = new ArrayList<>();
         sListViewAdapter = new SListViewAdapter(dataList);
         mAdapter = sListViewAdapter;
@@ -106,6 +103,7 @@ public class CourseView extends AppCompatActivity {
         assignCancelOnClickListener();
 
         // handle data list
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView = (RecyclerView) findViewById(R.id.sections);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -123,7 +121,7 @@ public class CourseView extends AppCompatActivity {
 
     private void assignDetailsOnClickListener(final String descriptionText) {
 
-        // TODO: BUG !!!!!!!!!!!!!
+        // TODO: BUG !!!!!!!!!!!!! detail data is not correct
 
         details.setOnClickListener(new View.OnClickListener() {
             @Override

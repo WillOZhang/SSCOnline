@@ -48,7 +48,7 @@ public class SListViewAdapter extends RecyclerView.Adapter<SListViewAdapter.View
         }
     }
 
-    public SListViewAdapter(ArrayList<String> data) {
+    public SListViewAdapter (ArrayList<String> data) {
         this.values = data;
 
         if (firstLineTextList == null && secondLineTextList == null) {

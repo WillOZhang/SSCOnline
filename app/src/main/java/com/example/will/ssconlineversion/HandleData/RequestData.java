@@ -126,7 +126,6 @@ public class RequestData {
             Document sectionInfoDoc = Jsoup.parse(sectionInfoText);
             Element sectionPage = sectionInfoDoc.getElementsByClass("content expand").first();
 
-
             // dealing with seats
             Element seatsSummaryElement = sectionPage.getElementsByAttribute("table-nonfluid&#39;").first();
             int total = 0;
